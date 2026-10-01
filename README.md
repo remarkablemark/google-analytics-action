@@ -11,17 +11,19 @@
 ```yaml
 on: push
 jobs:
-  google-analytics-action:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Google Analytics Action
+      # build site...
+
+      - name: Inject Google Analytics
         uses: remarkablemark/google-analytics-action@v1
         with:
           html-path: dist/index.html
           measurement-id: G-XXXXXXXXXX
 ```
 
-The action injects the [gtag.js](https://support.google.com/analytics/answer/9304153) script before the closing `</head>` tag. If `</head>` is not present, it falls back to inserting before `</body>`. The action fails if neither tag exists. It also fails if the file does not exist and skips injection if the snippet is already present.
+The action injects the [gtag.js](https://support.google.com/analytics/answer/9304153) script before the closing `</head>` tag. If `</head>` is not present, it falls back to inserting before `</body>`. The action fails if neither tag exists. It skips injection if the Google Analytics script is already present and it fails if the HTML file does not exist.
 
 ## Inputs
 
