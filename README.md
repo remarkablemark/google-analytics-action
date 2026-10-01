@@ -21,13 +21,15 @@ jobs:
           measurement-id: G-XXXXXXXXXX
 ```
 
-See [action.yml](action.yml)
+The action injects the [gtag.js](https://support.google.com/analytics/answer/9304153) script before the closing `</head>` tag. If `</head>` is not present, it falls back to inserting before `</body>`. The action fails if neither tag exists. It also fails if the file does not exist and skips injection if the snippet is already present.
 
 ## Inputs
 
+See [action.yml](action.yml)
+
 ### `html-path`
 
-**Required**: The HTML file to modify:
+**Required**: Path to the HTML file to modify:
 
 ```yaml
 - uses: remarkablemark/google-analytics-action@v1

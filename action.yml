@@ -3,7 +3,7 @@ description: Inject Google Analytics tracking code into an HTML file with GitHub
 author: remarkablemark
 
 inputs:
-  html-file:
+  html-path:
     description: Path to the HTML file to modify
     required: true
 
@@ -16,10 +16,10 @@ runs:
   steps:
     - name: Inject Google Analytics script
       shell: bash
-      run: |
-        # TODO
+      run: bash "${GITHUB_ACTION_PATH}/scripts/inject.sh"
       env:
-        VERSION: ${{ inputs.version }}
+        HTML_PATH: ${{ inputs.html-path }}
+        MEASUREMENT_ID: ${{ inputs.measurement-id }}
 
 branding:
   icon: bar-chart

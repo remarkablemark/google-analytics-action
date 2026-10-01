@@ -15,11 +15,92 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Run action
-        uses: ./
-
-      - name: Run action with inputs
+      - name: Inject script into HTML with head
         uses: ./
         with:
-          html-path: dist/index.html
+          html-path: test/fixture/index.html
           measurement-id: G-XXXXXXXXXX
+
+      - name: Verify injection
+        run: |
+          if [ ! -f test/fixture/index.html ]; then
+            echo "Fixture missing"
+            exit 1
+          fi
+          if ! grep -q "googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" test/fixture/index.html; then
+            echo "Snippet missing"
+            exit 1
+          fi
+          count="$(grep -c "googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" test/fixture/index.html || true)"
+          if [ "$count" -ne 1 ]; then
+            echo "Expected exactly one snippet, found $count"
+            exit 1
+          fi
+          if ! grep -q "</head>" test/fixture/index.html; then
+            echo "Original </head> lost"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Run action again
+        uses: ./
+        with:
+          html-path: test/fixture/index.html
+          measurement-id: G-XXXXXXXXXX
+
+      - name: Verify idempotency
+        shell: bash
+        run: |
+          count="$(grep -c "googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" test/fixture/index.html || true)"
+          if [ "$count" -ne 1 ]; then
+            echo "Expected exactly one snippet after second run, found $count"
+            exit 1
+          fi
+
+      - name: Reset fixtures
+        shell: bash
+        run: |
+          git diff --name-only -- test/fixture/ | grep -q . && git checkout -- test/fixture/ || true
+
+      - name: Inject script into HTML with no head
+        uses: ./
+        with:
+          html-path: test/fixture/no-head.html
+          measurement-id: G-ABC1234567
+
+      - name: Verify injection before </body>
+        shell: bash
+        run: |
+          if ! grep -q "googletagmanager.com/gtag/js?id=G-ABC1234567" test/fixture/no-head.html; then
+            echo "Snippet missing"
+            exit 1
+          fi
+          if ! awk '
+            BEGIN { body=0; found=0 }
+            tolower($0) ~ /<\/body>/ { body=1 }
+            !body && tolower($0) ~ /googletagmanager\.com\/gtag\/js/ { found=1 }
+            END { exit found ? 0 : 1 }
+          ' test/fixture/no-head.html; then
+            echo "Snippet not placed before </body>"
+            exit 1
+          fi
+
+      - name: Reset fixtures
+        shell: bash
+        run: |
+          git checkout -- test/fixture/ || true
+
+      - name: Run action with missing file
+        id: missing
+        uses: ./
+        continue-on-error: true
+        with:
+          html-path: test/fixture/does-not-exist.html
+          measurement-id: G-XXXXXXXXXX
+
+      - name: Verify missing file fails
+        if: steps.missing.outcome != 'failure'
+        shell: bash
+        run: |
+          echo "Expected action to fail on missing file"
+          exit 1
