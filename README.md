@@ -23,8 +23,6 @@ jobs:
           measurement-id: G-XXXXXXXXXX
 ```
 
-The action injects the [gtag.js](https://support.google.com/analytics/answer/9304153) script before the closing `</head>` tag. If `</head>` is not present, it falls back to inserting before `</body>`. The action fails if neither tag exists. It skips injection if the Google Analytics script is already present and it fails if the HTML file does not exist.
-
 ## Inputs
 
 See [action.yml](action.yml)
@@ -48,6 +46,13 @@ See [action.yml](action.yml)
   with:
     measurement-id: G-XXXXXXXXXX
 ```
+
+## Features
+
+- The action injects the [gtag.js](https://support.google.com/analytics/answer/9304153) script before the closing `</head>` tag.
+- If `</head>` is not present, it falls back to inserting before `</body>`.
+- The action fails if neither tag exists or if the HTML file does not exist.
+- It skips injection if the Google Analytics script is already present in the HTML file.
 
 ## License
 
