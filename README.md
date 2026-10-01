@@ -1,43 +1,48 @@
-# github-actions-composite-template
+# google-analytics-action
 
-[![GitHub Release](https://img.shields.io/github/v/release/remarkablemark/github-actions-composite-template)](https://github.com/remarkablemark/github-actions-composite-template/releases)
-[![test](https://github.com/remarkablemark/github-actions-composite-template/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/github-actions-composite-template/actions/workflows/test.yml)
-[![lint](https://github.com/remarkablemark/github-actions-composite-template/actions/workflows/lint.yml/badge.svg)](https://github.com/remarkablemark/github-actions-composite-template/actions/workflows/lint.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/remarkablemark/google-analytics-action)](https://github.com/remarkablemark/google-analytics-action/releases)
+[![test](https://github.com/remarkablemark/google-analytics-action/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/google-analytics-action/actions/workflows/test.yml)
+[![lint](https://github.com/remarkablemark/google-analytics-action/actions/workflows/lint.yml/badge.svg)](https://github.com/remarkablemark/google-analytics-action/actions/workflows/lint.yml)
 
-⚙️ GitHub Actions Composite Template. Inspired by [remarkablemark/hello-world-composite-action](https://github.com/remarkablemark/hello-world-composite-action).
+📊 Inject Google Analytics tracking code into an HTML file with GitHub Actions.
 
-## Quick Start
+## Usage
 
 ```yaml
 on: push
 jobs:
-  github-actions-composite-template:
+  google-analytics-action:
     runs-on: ubuntu-latest
     steps:
-      - name: GitHub Actions Composite Template
-        uses: remarkablemark/github-actions-composite-template@v1
-```
-
-## Usage
-
-**Basic:**
-
-```yaml
-- uses: remarkablemark/github-actions-composite-template@v1
+      - name: Google Analytics Action
+        uses: remarkablemark/google-analytics-action@v1
+        with:
+          html-path: dist/index.html
+          measurement-id: G-XXXXXXXXXX
 ```
 
 See [action.yml](action.yml)
 
 ## Inputs
 
-### `version`
+### `html-path`
 
-**Optional**: The version. Defaults to `1.2.3`:
+**Required**: The HTML file to modify:
 
 ```yaml
-- uses: remarkablemark/github-actions-composite-template@v1
+- uses: remarkablemark/google-analytics-action@v1
   with:
-    version: 1.2.3
+    html-path: dist/index.html
+```
+
+### `measurement-id`
+
+**Required**: The Google Analytics ID (e.g., G-XXXXXXXXXX):
+
+```yaml
+- uses: remarkablemark/google-analytics-action@v1
+  with:
+    measurement-id: G-XXXXXXXXXX
 ```
 
 ## License

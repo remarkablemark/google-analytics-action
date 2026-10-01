@@ -1,23 +1,26 @@
-name: github-actions-composite-template
-description: GitHub Actions Composite Template
+name: google-analytics-action
+description: Inject Google Analytics tracking code into an HTML file with GitHub Actions
 author: remarkablemark
 
 inputs:
-  version:
-    description: Version
-    required: false
-    default: 1.2.3
+  html-file:
+    description: Path to the HTML file to modify
+    required: true
+
+  measurement-id:
+    description: Google Analytics Measurement ID (e.g., G-XXXXXXXXXX)
+    required: true
 
 runs:
   using: composite
   steps:
-    - name: Print version
+    - name: Inject Google Analytics script
       shell: bash
       run: |
-        echo "version: $VERSION"
+        # TODO
       env:
         VERSION: ${{ inputs.version }}
 
 branding:
-  icon: activity
-  color: white
+  icon: bar-chart
+  color: orange
