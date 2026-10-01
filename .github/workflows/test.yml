@@ -76,10 +76,10 @@ jobs:
             exit 1
           fi
           if ! awk '
-            BEGIN { inbody=0; found=0 }
-            tolower($0) ~ /<\/body>/ { inbody=1 }
-            found==0 && inbody==1 && /googletagmanager\.com\/gtag\/js/ { found=1 }
-            END { exit found==1 ? 0 : 1 }
+            BEGIN { body=0; found=0 }
+            tolower($0) ~ /<\/body>/ { body=1 }
+            !body && tolower($0) ~ /googletagmanager\.com\/gtag\/js/ { found=1 }
+            END { exit found ? 0 : 1 }
           ' test/fixture/no-head.html; then
             echo "Snippet not placed before </body>"
             exit 1
